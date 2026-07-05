@@ -1,0 +1,87 @@
+import sys
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont
+
+
+class TextAnalyzer(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Текстовый анализатор")
+        self.setMinimumSize(800, 550)
+        self._create_ui()
+
+    def _create_ui(self):
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+
+        main_layout = QHBoxLayout()
+        central_widget.setLayout(main_layout)
+
+        left_widget = QWidget()
+        left_layout = QVBoxLayout()
+        left_widget.setLayout(left_layout)
+
+        label = QLabel("Введите текст для анализа:")
+        label.setFont(QFont("Segoe UI", 11))
+        left_layout.addWidget(label)
+
+        self.text_input = QTextEdit()
+        self.text_input.setPlaceholderText("Вставьте сюда любой текст...")
+        self.text_input.setMinimumHeight(150)
+        left_layout.addWidget(self.text_input)
+
+        self.analyze_button = QPushButton("Анализировать")
+        self.analyze_button.setFont(QFont("Segoe UI", 10))
+        self.analyze_button.setStyleSheet("""
+            QPushButton {
+                background-color: #4CAF50;
+                color: white;
+                padding: 8px;
+                border-radius: 4px;
+            }
+            QPushButton:hover {
+                background-color: #45a049;
+            }
+        """)
+        left_layout.addWidget(self.analyze_button)
+
+        group = QGroupBox("Результаты")
+        group_layout = QVBoxLayout()
+
+        self.words_label = QLabel("Слова: 0")
+        self.chars_label = QLabel("Буквы: 0")
+        self.sentences_label = QLabel("Предложения: 0")
+        self.density_label = QLabel("Плотность: 0")
+
+        for lbl in [self.words_label, self.chars_label, self.sentences_label, self.density_label]:
+            lbl.setFont(QFont("Segoe UI", 10))
+            group_layout.addWidget(lbl)
+
+        group.setLayout(group_layout)
+        left_layout.addWidget(group)
+        left_layout.addStretch()
+
+        right_widget = QWidget()
+        right_layout = QVBoxLayout()
+        right_widget.setLayout(right_layout)
+
+        self.image_label = QLabel("Обложка книги")
+        self.image_label.setAlignment(Qt.AlignCenter)
+        self.image_label.setMinimumHeight(200)
+        self.image_label.setStyleSheet("""
+            background-color: #f5f5f5;
+            border: 2px dashed #aaaaaa;
+            border-radius: 8px;
+        """)
+        right_layout.addWidget(self.image_label)
+
+        self.load_image_button = QPushButton("Загрузить обложку")
+        right_layout.addWidget(self.load_image_button)
+        right_layout.addStretch()
+
+        splitter = QSplitter(Qt.Horizontal)
+        splitter.addWidget(left_widget)
+        splitter.addWidget(right_widget)
+        splitter.setSizes([450, 300])
+        main_layout.addWidget(splitter)
