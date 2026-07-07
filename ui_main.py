@@ -1,4 +1,5 @@
 import sys
+import re
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
@@ -10,6 +11,7 @@ class TextAnalyzer(QMainWindow):
         self.setWindowTitle("Текстовый анализатор")
         self.setMinimumSize(800, 550)
         self._create_ui()
+        self._connect_signals()
 
     def _create_ui(self):
         central_widget = QWidget()
@@ -85,3 +87,18 @@ class TextAnalyzer(QMainWindow):
         splitter.addWidget(right_widget)
         splitter.setSizes([450, 300])
         main_layout.addWidget(splitter)
+
+    def _connect_signals(self):
+        self.analyze_button.clicked.connect(self._analyze_text)
+
+    def _analyze_text(self):
+        text = self.text_input.toPlainText()
+        if not text.strip():
+            QMessageBox.information(self, "Нет текста", "Введите текст для анализа.")
+            return
+
+        words = len(re.findall(r'\b\w+\b', text))
+        chars = len(re.findall(r'[а-яА-Яa-zA-Z]', text))
+
+        self.words_label.setText(f"Слова: {words}")
+        self.chars_label.setText(f"Буквы: {chars}")
