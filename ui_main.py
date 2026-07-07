@@ -99,6 +99,8 @@ class TextAnalyzer(QMainWindow):
 
         words = len(re.findall(r'\b\w+\b', text))
         chars = len(re.findall(r'[а-яА-Яa-zA-Z]', text))
+        sentences = len(re.split(r'[.!?]+', text)) - 1
 
         self.words_label.setText(f"Слова: {words}")
         self.chars_label.setText(f"Буквы: {chars}")
+        self.sentences_label.setText(f"Предложения: {sentences}")
