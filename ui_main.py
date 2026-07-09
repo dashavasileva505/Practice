@@ -10,6 +10,7 @@ class TextAnalyzer(QMainWindow):
         super().__init__()
         self.setWindowTitle("Текстовый анализатор")
         self.setMinimumSize(800, 550)
+        self.setStyleSheet("background-color: #FFF7E6;")
         self._create_ui()
         self._connect_signals()
 
@@ -29,23 +30,21 @@ class TextAnalyzer(QMainWindow):
         left_layout.addWidget(label)
 
         self.text_input = QTextEdit()
+        self.text_input.setStyleSheet("background-color: #A8B58A;")
         self.text_input.setPlaceholderText("Вставьте сюда любой текст...")
         self.text_input.setMinimumHeight(150)
         left_layout.addWidget(self.text_input)
 
         self.analyze_button = QPushButton("Анализировать")
-        self.analyze_button.setFont(QFont("Segoe UI", 10))
         self.analyze_button.setStyleSheet("""
             QPushButton {
-                background-color: #4CAF50;
+                background-color: #F7C8D3;
                 color: white;
+                border-radius: 8px;
                 padding: 8px;
-                border-radius: 4px;
-            }
-            QPushButton:hover {
-                background-color: #45a049;
             }
         """)
+        self.analyze_button.setFont(QFont("Segoe UI", 10))
         left_layout.addWidget(self.analyze_button)
 
         group = QGroupBox("Результаты")
@@ -69,6 +68,11 @@ class TextAnalyzer(QMainWindow):
         right_widget.setLayout(right_layout)
 
         self.image_label = QLabel("Обложка книги")
+        self.image_label.setStyleSheet("""
+            background-color: #ffff99;
+            border: 2px dashed #331a00;
+            border-radius: 8px;
+        """)
         self.image_label.setAlignment(Qt.AlignCenter)
         self.image_label.setMinimumHeight(200)
         self.image_label.setStyleSheet("""
@@ -79,6 +83,14 @@ class TextAnalyzer(QMainWindow):
         right_layout.addWidget(self.image_label)
 
         self.load_image_button = QPushButton("Загрузить обложку")
+        self.load_image_button.setStyleSheet("""
+            QPushButton {
+                background-color: #A8B58A;
+                color: white;
+                border-radius: 8px;
+                padding: 8px;
+            }
+        """)
         right_layout.addWidget(self.load_image_button)
         right_layout.addStretch()
 
