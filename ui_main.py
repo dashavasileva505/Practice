@@ -215,3 +215,7 @@ class TextAnalyzer(QMainWindow):
         shortcut_analyze2 = QShortcut(QKeySequence("Ctrl+Enter"), self)
         shortcut_analyze2.activated.connect(self._analyze_text)
         shortcut_analyze2.setContext(Qt.ApplicationShortcut)
+
+        shortcut_export = QShortcut(QKeySequence("Ctrl+E"), self)
+        shortcut_export.activated.connect(self._export_csv)
+        shortcut_export.setContext(Qt.ApplicationShortcut)
