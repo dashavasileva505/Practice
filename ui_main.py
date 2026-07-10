@@ -94,6 +94,18 @@ class TextAnalyzer(QMainWindow):
             }
         """)
         right_layout.addWidget(self.load_image_button)
+
+        self.export_button = QPushButton("Экспорт в CSV")
+        self.export_button.setStyleSheet("""
+            QPushButton {
+                background-color: #331a00;
+                color: white;
+                border-radius: 8px;
+                padding: 8px;
+            }
+        """)
+        right_layout.addWidget(self.export_button)
+
         right_layout.addStretch()
 
         splitter = QSplitter(Qt.Horizontal)
@@ -105,6 +117,7 @@ class TextAnalyzer(QMainWindow):
     def _connect_signals(self):
         self.analyze_button.clicked.connect(self._analyze_text)
         self.load_image_button.clicked.connect(self._load_image)
+        self.export_button.clicked.connect(self._export_csv)
 
     def _analyze_text(self):
         text = self.text_input.toPlainText()
@@ -152,3 +165,41 @@ class TextAnalyzer(QMainWindow):
             self.image_label.setStyleSheet("background-color: transparent; border: none;")
         except Exception as error:
             QMessageBox.critical(self, "Ошибка", f"Не удалось загрузить изображение:\n{error}")
+
+    def _export_csv(self):
+        import csv
+        from datetime import datetime
+
+        text = self.text_input.toPlainText()
+        if not text.strip():
+            QMessageBox.warning(self, "Нет текста", "Сначала введите текст и выполните анализ.")
+            return
+
+        words = self.words_label.text()
+        chars = self.chars_label.text()
+        sentences = self.sentences_label.text()
+        density = self.density_label.text()
+
+        file_path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Сохранить CSV",
+            f"analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+            "CSV files (*.csv)"
+        )
+
+        if not file_path:
+            return
+
+        try:
+            with open(file_path, 'w', newline='', encoding='utf-8-sig') as f:
+                writer = csv.writer(f)
+                writer.writerow(["Параметр", "Значение"])
+                writer.writerow(["Слова", words.split(":")[1].strip()])
+                writer.writerow(["Буквы", chars.split(":")[1].strip()])
+                writer.writerow(["Предложения", sentences.split(":")[1].strip()])
+                writer.writerow(["Плотность", density.split(":")[1].strip()])
+                writer.writerow(["Текст", text[:100] + "..." if len(text) > 100 else text])
+
+            QMessageBox.information(self, "Успех", f"Результаты сохранены в {file_path}")
+        except Exception as e:
+            QMessageBox.critical(self, "Ошибка", f"Не удалось сохранить: {e}")
