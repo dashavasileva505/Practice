@@ -122,6 +122,18 @@ class TextAnalyzer(QMainWindow):
         self.sentences_label.setText(f"Предложения: {sentences}")
         self.density_label.setText(f"Плотность: {density}")
 
+    def closeEvent(self, event):
+        reply = QMessageBox.question(
+            self,
+            "Выход",
+            "Вы уверены, что хотите выйти?",
+            QMessageBox.Yes | QMessageBox.No
+        )
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
+
     def _load_image(self):
         file_path, _ = QFileDialog.getOpenFileName(
             self,
