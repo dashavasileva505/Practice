@@ -3,6 +3,8 @@ import re
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QPixmap, QImage
+from PIL import Image
 
 
 class TextAnalyzer(QMainWindow):
@@ -102,6 +104,7 @@ class TextAnalyzer(QMainWindow):
 
     def _connect_signals(self):
         self.analyze_button.clicked.connect(self._analyze_text)
+        self.load_image_button.clicked.connect(self._load_image)
 
     def _analyze_text(self):
         text = self.text_input.toPlainText()
@@ -118,3 +121,22 @@ class TextAnalyzer(QMainWindow):
         self.chars_label.setText(f"Буквы: {chars}")
         self.sentences_label.setText(f"Предложения: {sentences}")
         self.density_label.setText(f"Плотность: {density}")
+
+    def _load_image(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Выберите изображение",
+            "",
+            "Изображения (*.png *.jpg *.jpeg *.bmp)"
+        )
+        if not file_path:
+            return
+        try:
+            image = Image.open(file_path).convert("RGBA")
+            image.thumbnail((250, 250), Image.LANCZOS)
+            qimage = QImage(image.tobytes(), image.width, image.height, QImage.Format_RGBA8888)
+            pixmap = QPixmap.fromImage(qimage)
+            self.image_label.setPixmap(pixmap)
+            self.image_label.setStyleSheet("background-color: transparent; border: none;")
+        except Exception as error:
+            QMessageBox.critical(self, "Ошибка", f"Не удалось загрузить изображение:\n{error}")
