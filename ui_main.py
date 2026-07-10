@@ -4,6 +4,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtWidgets import QShortcut
+from PyQt5.QtGui import QKeySequence
 from PIL import Image
 
 
@@ -15,6 +17,7 @@ class TextAnalyzer(QMainWindow):
         self.setStyleSheet("background-color: #FFF7E6;")
         self._create_ui()
         self._connect_signals()
+        self._setup_shortcuts()
 
     def _create_ui(self):
         central_widget = QWidget()
@@ -203,3 +206,12 @@ class TextAnalyzer(QMainWindow):
             QMessageBox.information(self, "Успех", f"Результаты сохранены в {file_path}")
         except Exception as e:
             QMessageBox.critical(self, "Ошибка", f"Не удалось сохранить: {e}")
+
+    def _setup_shortcuts(self):
+        shortcut_analyze = QShortcut(QKeySequence("Ctrl+Return"), self)
+        shortcut_analyze.activated.connect(self._analyze_text)
+        shortcut_analyze.setContext(Qt.ApplicationShortcut)
+
+        shortcut_analyze2 = QShortcut(QKeySequence("Ctrl+Enter"), self)
+        shortcut_analyze2.activated.connect(self._analyze_text)
+        shortcut_analyze2.setContext(Qt.ApplicationShortcut)
